@@ -1,0 +1,33 @@
+.imgCont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+}
+
+.home {
+    background-image: url("./image/pro4.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.imgContainer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+@keyframes imgAnimation {
+    from {
+        display: none;
+        transform: translate3d(-90);
+
+    }
+
+    to {
+        display: block;
+        transform: translate3d(0);
+        transition: all 2s linear ease-in;
+    }
+}
