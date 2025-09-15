@@ -1,5 +1,5 @@
+import axios from "axios";
 import { useRef, useState } from "react";
-import emailjs from "emailjs-com";
 
 const Contact = () => {
     const form = useRef();
@@ -7,29 +7,35 @@ const Contact = () => {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState("");
 
-    const sendEmail = (e) => {
+    const sendEmail = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        emailjs
-            .sendForm(
-                "service_aizwp3l",
-                "template_l86fffs",
-                form.current,
-                "gfP-zW3DD1k0i4mvx"
-            )
-            .then(
-                (result) => {
-                    setStatus("Message sent successfully!");
-                    setLoading(false);
-                    form.current.reset();
-                },
-                (error) => {
-                    setStatus("Failed to send. Try again!");
-                    setLoading(false);
-                    console.error(error.text);
-                }
+        const formData = new FormData(form.current);
+        formData.append("service_id", "service_aizwp3l");
+        formData.append("template_id", "template_l86fffs");
+        formData.append("user_id", "gfP-zW3DD1k0i4mvx");
+
+        try {
+            const response = await axios.post(
+                "https://api.emailjs.com/api/v1.0/email/send-form",
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
             );
+
+            if (response.status === 200) {
+                setStatus("Message sent successfully!");
+                form.current.reset();
+            } else {
+                setStatus("Failed to send. Try again!");
+                console.error("Error:", response);
+            }
+        } catch (error) {
+            setStatus("Failed to send. Try again!");
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
 
